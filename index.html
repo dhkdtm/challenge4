@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>안 보인다고 안 쓰는 게 아니다</title>
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --secondary: #27ae60;
+            --accent: #e74c3c;
+            --bg: #f0fdf4;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --gray: #95a5a6;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            margin: 10px 0 0;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            padding: 5px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--secondary);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Content Area */
+        .content {
+            padding: 30px 20px;
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Input Section */
+        .input-group {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+            box-sizing: border-box; /* Padding 포함 */
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--primary);
+        }
+
+        .unit {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-weight: bold;
+        }
+
+        /* Visualization Box */
+        .visual-box {
+            background-color: #f8fafc;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 1px solid #edf2f7;
+        }
+
+        .result-summary {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 800;
+            font-size: 1.4rem;
+        }
+
+        .icons-container {
+            font-size: 2rem;
+            line-height: 1.8;
+            letter-spacing: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            word-break: break-all;
+            padding: 10px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        /* Tips Section */
+        .tips-container h3 {
+            color: var(--secondary);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tip-card {
+            background: white;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            transition: transform 0.2s;
+        }
+
+        .tip-card:hover {
+            transform: translateX(5px);
+        }
+
+        .tip-title {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+            color: #333;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            background: #f9f9f9;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #888;
+            border-top: 1px solid #eee;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            header h1 { font-size: 1.3rem; }
+            input[type="number"] { font-size: 1.2rem; }
+            .icons-container { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1>안 보인다고 안 쓰는 게 아니다</h1>
+        <p>나의 디지털 활동이 지구에 미치는 영향</p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('cloud')">☁️ 클라우드</button>
+        <button class="tab-btn" onclick="switchTab('llm')">🤖 AI 호출</button>
+    </div>
+
+    <!-- Cloud Tab -->
+    <div id="cloud" class="content active">
+        <div class="input-group">
+            <label for="cloudInput">현재 저장된 클라우드 용량</label>
+            <div class="input-wrapper">
+                <input type="number" id="cloudInput" placeholder="0" min="0" oninput="calculateCloud()">
+                <span class="unit">GB</span>
+            </div>
+        </div>
+
+        <div class="visual-box">
+            <div id="cloudText" class="result-summary">
+                데이터를 입력하면<br>결과가 표시됩니다.
+            </div>
+            <div id="cloudIcons" class="icons-container"></div>
+        </div>
+
+        <div class="tips-container">
+            <h3>🧹 클라우드 다이어트 팁</h3>
+            <div class="tip-card">
+                <span class="tip-title">📸 중복 사진 & 스크린샷 정리</span>
+                클라우드 용량의 주범입니다. '비슷한 사진 정리' 기능을 활용하거나 캡처 후 자동 저장된 스크린샷을 삭제하세요.
+            </div>
+            <div class="tip-card">
+                <span class="tip-title">🗑️ 휴지통 비우기</span>
+                삭제 버튼을 눌렀다고 끝이 아닙니다. 휴지통까지 비워야 서버에서 데이터가 완전히 사라집니다.
+            </div>
+            <div class="tip-card">
+                <span class="tip-title">📧 오래된 뉴스레터 삭제</span>
+                읽지 않는 뉴스레터를 구독 취소하고, 3년 이상 지난 대용량 첨부파일 메일을 검색해 삭제하세요.
+            </div>
+        </div>
+    </div>
+
+    <!-- LLM Tab -->
+    <div id="llm" class="content">
+        <div class="input-group">
+            <label for="llmInput">하루 AI (LLM) 질문 횟수</label>
+            <div class="input-wrapper">
+                <input type="number" id="llmInput" placeholder="0" min="0" oninput="calculateLLM()">
+                <span class="unit">회</span>
+            </div>
+        </div>
+
+        <div class="visual-box">
+            <div id="llmText" class="result-summary">
+                질문 횟수를 입력하면<br>결과가 표시됩니다.
+            </div>
+            <div id="llmIcons" class="icons-container"></div>
+        </div>
+
+        <div class="tips-container" style="margin-top: 20px;">
+            <h3>💡 AI 친환경 사용법</h3>
+            <div class="tip-card" style="border-left-color: var(--accent);">
+                <span class="tip-title">🎯 구체적으로 한 번에 질문하기</span>
+                모호한 질문은 여러 번의 재질문을 유발합니다. 프롬프트를 구체적으로 작성해 한 번에 답을 얻으세요.
+            </div>
+            <div class="tip-card" style="border-left-color: var(--accent);">
+                <span class="tip-title">🔍 단순 정보는 검색엔진 활용</span>
+                단순한 사실 확인이나 날씨 정보 등은 거대 언어 모델보다 일반 검색엔진이 훨씬 적은 전력을 소모합니다.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        * 계산 로직은 데이터센터 에너지 효율 평균치를 기반으로 한 추정값입니다.<br>
+        (1GB/년 ≈ 스마트폰 30회 충전, 1회 LLM 호출 ≈ 10W 전구 20분)
+    </footer>
+</div>
+
+<script>
+    // Tab Switching Logic
+    function switchTab(tabId) {
+        // Hide all contents
+        document.querySelectorAll('.content').forEach(content => {
+            content.classList.remove('active');
+        });
+        // Deactivate all buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Activate selected
+        document.getElementById(tabId).classList.add('active');
+        
+        // Find button corresponding to tabId and activate
+        const buttons = document.querySelectorAll('.tab-btn');
+        if(tabId === 'cloud') buttons[0].classList.add('active');
+        else buttons[1].classList.add('active');
+    }
+
+    // Cloud Calculation Logic
+    // 메타포: 1GB 데이터 1년 유지 탄소발자국 ≈ 스마트폰 약 30~50회 충전 (연구 기관마다 상이, 교육적 목적의 평균치 적용)
+    // 기준: 1GB = 30 Phone Charges (Impactful visualization)
+    function calculateCloud() {
+        const gb = parseFloat(document.getElementById('cloudInput').value);
+        const textElem = document.getElementById('cloudText');
+        const iconElem = document.getElementById('cloudIcons');
+
+        if (isNaN(gb) || gb <= 0) {
+            textElem.innerHTML = "데이터를 입력하면<br>결과가 표시됩니다.";
+            iconElem.innerHTML = "";
+            return;
+        }
+
+        // Calculation: 1GB per year approx eq to charging phone 30 times
+        const charges = Math.floor(gb * 30);
+        const formattedCharges = charges.toLocaleString();
+
+        textElem.innerHTML = `내 클라우드 데이터 <span class="highlight">${gb}GB</span>를 유지하는 건<br>스마트폰을 <span class="highlight">${formattedCharges}번</span> 충전하는 것과 같습니다.`;
+
+        // Generate Icons (Limit to max 200 icons to prevent browser lag)
+        let icons = '';
+        const maxIcons = 100;
+        const displayCount = Math.min(charges, maxIcons);
+        
+        for(let i=0; i < displayCount; i++) {
+            icons += '🔋';
+        }
+        if (charges > maxIcons) {
+            icons += ` ... (+${(charges - maxIcons).toLocaleString()})`;
+        }
+        
+        iconElem.innerHTML = icons;
+    }
+
+    // LLM Calculation Logic
+    // 메타포: LLM 1회 쿼리 전력량 ≈ 10W LED 전구를 10~20분 켜놓은 전력량 (구글 검색의 10배~100배)
+    // 기준: 1 Query = 20 mins of 10W LED Bulb
+    function calculateLLM() {
+        const calls = parseFloat(document.getElementById('llmInput').value);
+        const textElem = document.getElementById('llmText');
+        const iconElem = document.getElementById('llmIcons');
+
+        if (isNaN(calls) || calls <= 0) {
+            textElem.innerHTML = "질문 횟수를 입력하면<br>결과가 표시됩니다.";
+            iconElem.innerHTML = "";
+            return;
+        }
+
+        // Calculation: minutes
+        const minutes = calls * 20;
+        let timeString = "";
+        
+        if (minutes >= 60) {
+            const hours = (minutes / 60).toFixed(1);
+            timeString = `${hours}시간`;
+        } else {
+            timeString = `${minutes}분`;
+        }
+
+        textElem.innerHTML = `오늘 ${calls}번의 AI 대화는<br>10W LED 전구를 <span class="highlight">${timeString}</span> 동안<br>켜놓은 에너지를 사용했습니다.`;
+
+        // Generate Icons
+        let icons = '';
+        const maxIcons = 100;
+        // Icon logic: 1 bulb per call for visual simplicity, or 1 bulb per hour?
+        // Let's do 1 bulb icon per call to represent the quantity of queries
+        const displayCount = Math.min(calls, maxIcons);
+
+        for(let i=0; i < displayCount; i++) {
+            icons += '💡';
+        }
+        if (calls > maxIcons) {
+            icons += ` ... (+${(calls - maxIcons).toLocaleString()})`;
+        }
+
+        iconElem.innerHTML = icons;
+    }
+</script>
+
+</body>
+</html>
